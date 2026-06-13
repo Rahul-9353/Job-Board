@@ -4,6 +4,8 @@ import Login from './pages/Login'
 import Home from './pages/Home'
 import Jobs from './pages/Jobs'
 import Tracker from './pages/Tracker'
+import PostJob from './pages/PostJob'
+import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
   return (
@@ -13,7 +15,26 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path='/login' element={<Login />} />
         <Route path='/jobs' element={<Jobs />} />
-        <Route path='/tracker' element={<Tracker />} />
+
+        {/* Candidate only or logged in user */}
+        <Route 
+          path='/tracker' 
+          element={
+            <ProtectedRoute>
+              <Tracker />
+            </ProtectedRoute>
+          } 
+        />
+
+        {/* Recruiter */}
+        <Route 
+          path='/post-job' 
+          element={
+            <ProtectedRoute allowedRoles={['RECRUITER']}>  
+              <PostJob />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
     </BrowserRouter>
   )

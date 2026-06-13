@@ -1,9 +1,18 @@
 import { useState } from 'react';
 import {Link, useNavigate} from 'react-router-dom'
+import { useAuth } from '../context/AuthContext';
 
 function Navbar() {
     const navigate = useNavigate()
+    const { user, logout, isLoggedIn } = useAuth()
     const [menuOpen, setMenuOpen] = useState(false)
+
+    const handleLogout = () => {
+        logout()
+        setMenuOpen(false)
+        navigate('/')
+    }
+
   return (
 
     <>
@@ -64,7 +73,7 @@ function Navbar() {
                 color: white;
             }
 
-            .btn-login {
+            .btn-login, .btn-logout, .btn-postjob {
                 background: #2255f5;
                 color: white;
                 border: none;
@@ -77,8 +86,54 @@ function Navbar() {
                 white-space: nowrap;
             }
 
-            .btn-login:hover {
+            .btn-login:hover, .btn-postjob:hover {
                 background: #1a44e8;
+            }
+
+            .btn-logout {
+                background: transparent;
+                border: 1px solid rgba(239, 68, 68, 0.3);
+                color: #f87171;
+            }
+
+            .btn-logout:hover {
+                background: rgba(239, 68, 68, 0.1);
+            }
+
+            .user-chip {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                padding: 0.35rem 0.9rem 0.35rem 0.35rem;
+                border-radius: 999px;
+            }
+
+            .user-avatar {
+                width: 28px;
+                height: 28px;
+                border-radius: 50%;
+                background: rgba(34, 85, 245, 0.2);
+                color: #6b9bff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 0.8rem;
+                font-weight: 700;    
+            }
+
+            .user-name {
+                color: #e8e8f0;
+                font-size: 0.85rem;
+                font-weight: 600;
+            }
+
+            .user-role {
+                color: #555570;
+                font-size: 0.7rem;
+                text-transform: uppercase;
+                letter-spacing: 0.04rem;
             }
 
             .hamburger {
@@ -108,10 +163,22 @@ function Navbar() {
                 padding: 0.4rem 0;
             }
             
-            .mobile-menu .btn-login {
+            .mobile-menu .btn-login,
+            .mobile-menu .btn-logout,
+            .mobile-menu .btn-postjob {
                 width: 100%;
                 padding: 0.7rem;
                 font-size: 1rem;
+                text-align: center;
+            }
+
+            .mobile-user-chip {
+                display: flex;
+                align-items: center;
+                gap: 0.6rem;
+                padding: 0.5rem 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+                margin-bottom: 0.3rem;
             }
 
             /* Tablet */
@@ -122,7 +189,9 @@ function Navbar() {
                 .nav-links a {
                     font-size: 0.85rem;
                 }
-                .btn-login { 
+                .btn-login,
+                .btn-logout,
+                .btn-postjob { 
                     padding: 0.45rem 1rem;
                     font-size: 0.85rem;
                 }
@@ -151,10 +220,35 @@ function Navbar() {
                 {/* Desktop Links */}
                 <div className='nav-links'>
                     <Link to="/jobs">Browse Jobs</Link>
-                    <Link to="/tracker">My Applications</Link>
-                    <button className='btn-login' onClick={() => navigate('/login')}>
+
+                    {isLoggedIn && (
+                        <Link to="/tracker">My Applications</Link>
+                    )}
+
+                    {isLoggedIn && user?.role === 'RECRUITER' && (
+                        <Link to="/post-job">Post a Job</Link>
+                    )}
+
+                    {isLoggedIn ? (
+                        <>
+                            <div className='user-chip'>
+                                <div className='user-avatar'>
+                                    {user?.name?.[0]?.toUpperCase() || 'U'}
+                                </div>
+                                <div>
+                                    <div className='user-name'>{user?.name || 'User'}</div>
+                                    <div className='user-role'>{user?.role || 'candidate'}</div>
+                                </div>
+                            </div>
+                            <button className='btn-logout' onClick={handleLogout}>
+                                Logout
+                            </button>
+                        </>
+                    ) : (
+                        <button className='btn-login' onClick={() => navigate('/login')}>
                         Login
-                    </button>
+                        </button>
+                    )}
                 </div>
 
                 {/* Hamburger */}
@@ -166,11 +260,37 @@ function Navbar() {
             {/* Mobile Dropdown */}
             {menuOpen && (
                 <div className='mobile-menu'>
+                    {isLoggedIn && (
+                        <div className='mobile-user-chip'>
+                            <div className='user-avatar'>
+                                {user?.name?.[0]?.toUpperCase() || 'U'}
+                            </div>
+                            <div>
+                                <div className='user-name'>{user?.name || 'User' }</div>
+                                <div className='user-role'>{user?.role || 'candidate'}</div>
+                            </div>
+                        </div>
+                    )}
+
                     <Link to="/jobs" onClick={() => setMenuOpen(false)}>Browse Jobs</Link>
-                    <Link to="/tracker" onClick={() => setMenuOpen(false)}>My Applications</Link>
-                    <button className='btn-login' onClick={() => { navigate('/login'); setMenuOpen(false) }}>
+
+                    {isLoggedIn && (
+                        <Link to="/tracker" onClick={() => setMenuOpen(false)}>My Applications</Link>
+                    )}
+
+                    {isLoggedIn && user?.role === 'RECRUITER' && (
+                        <Link to="/post-job" onClick={() => setMenuOpen(false)}>Post a Job</Link>
+                    )}
+
+                    {isLoggedIn ? (
+                        <button className='btn-logout' onClick={handleLogout}>
+                            Logout
+                        </button>
+                    ) : (
+                        <button className='btn-login' onClick={() => { navigate('/login'); setMenuOpen(false) }}>
                         Login
-                    </button>
+                        </button>
+                    )}
                 </div>
             )}
         </nav>
