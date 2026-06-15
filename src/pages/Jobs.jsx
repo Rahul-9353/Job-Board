@@ -324,7 +324,7 @@ function Jobs() {
             {filtered.length > 0 ? (
                 <div className='jobs-grid'>
                     {filtered.map(job => (
-                        <div className='job-card' key={job.id}>
+                        <div className='job-card' key={job.id} onClick={() => navigate(`/jobs/${job.id}`)}>
                             <div className='job-card-top'>
                                 <div className='job-company-logo'>
                                     {job.company[0]}
@@ -350,8 +350,8 @@ function Jobs() {
 
                             <div className='job-card-footer'>
                                 <span className='job-salary'>{job.salary}</span>
-                                <button className='btn-apply' onClick={() => navigate('/login')}>
-                                    Apply Now
+                                <button className='btn-apply' onClick={(e) => { e.stopPropagation(); navigate(`/jobs/${job.id}`) }}>
+                                    View Details
                                 </button>
 
                             </div>

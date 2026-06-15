@@ -155,8 +155,147 @@ function JobDetails() {
                 margin-top: 1.5rem;
             }
 
-            
+            .section-label {
+                color: white;
+                font-weight: 700;
+                font-size: 1rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .details-description {
+                color: #a0a0b8;
+                font-size: 0.95rem;
+                line-height: 1.8;
+            }
+
+            .skills-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+
+            .skill-tag {
+                background: rgba(255, 255, 255, 0.06);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                color: #a0a0b8;
+                padding: 0.3rem 0.8rem;
+                border-radius: 6px;
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+
+            .apply-bar {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                border-top: 1px solid rgba(255, 255, 255, 0.06);
+                padding-top: 1.5rem;
+                margin-top: 1.5rem;
+                flex-wrap: wrap;
+                gap: 1rem;
+            }
+
+            .salary-display {
+                color: #4ade80;
+                font-weight: 800;
+                font-size: 1.3rem;
+            }
+
+            .salary-display span {
+                color: #a0a0b8;
+                font-weight: 500;
+                font-size: 0.85rem;
+                display: block;
+            }
+
+            .btn-apply-large {
+                background: #2255f5;
+                color: white;
+                border: none;
+                padding: 0.85rem 2.2rem;
+                border-radius: 10px;
+                font-size: 1rem;
+                font-weight: 700;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+            .btn-apply-large:hover {
+                background: #1a44e8;
+                transform: translateY(-2px);
+            }
+
+            .btn-applied {
+                background: rgba(34, 197, 94, 0.12);
+                color: #4ade80;
+                border: 1px solid rgba(34, 197, 94, 0.25);
+                padding: 0.85rem 2.2rem;
+                border-radius: 10px;
+                font-size: 1rem;
+                font-weight: 700;
+                cursor: default;
+            }
         `}</style>
+
+        <div className='details-page'>
+            <div className='details-container'>
+
+                <button className='back-link' onClick={() => navigate('/jobs')}>
+                    ← Back to all jobs
+                </button>
+
+                <div className='details-card'>
+
+                    {/* Header */}
+                    <div className='details-header'>
+                        <div className='details-logo'>{job.company[0]}</div>
+                        <div className='details-title-group'>
+                            <div className='details-title'>{job.title}</div>
+                            <div className='details-company'>{job.company}</div>
+                            <div className='details-meta'>
+                                <span className='details-meta-item'>📍 {job.location}</span>
+                                <span className='details-meta-item'>🕐 Posted {job.posted}</span>
+                            </div>
+                        </div>
+                        <span className={`type-badge ${job.type === 'Contract' ? 'contract' : ''}`}>
+                            {job.type}
+                        </span>
+                    </div>
+
+                    {/* Description */}
+                    <div className='details-section'>
+                        <div className='section-label'>Job Description</div>
+                        <p className='details-description'>{job.description}</p>
+                    </div>
+
+                    {/* Skills */}
+                    <div className='details-section'>
+                        <div className='section-label'>Required Skills</div>
+                        <div className='skills-row'>
+                            {job.skills.map(skill => (
+                                <span className='skill-tag' key={skill}>{skill}</span>
+                            ))}
+                        </div>
+                    </div>
+
+                    {/* Apply Bar */}
+                    <div className='apply-bar'>
+                        <div className='salary-display'>
+                            <span>Annual Salary</span>
+                                {job.salary}
+                        </div>
+
+                        {applied ? (
+                            <button className='btn-applied'>✓ Applied</button>
+                        ) : (
+                            <button className='btn-apply-large' onClick={handleApply}>
+                                {isLoggedIn ? 'Apply Now' : 'Login to Apply'}
+                            </button>
+                        )}
+                    </div>
+                </div>
+            </div>
+        </div>
     </>
   )
 }

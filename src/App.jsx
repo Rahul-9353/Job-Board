@@ -6,6 +6,7 @@ import Jobs from './pages/Jobs'
 import Tracker from './pages/Tracker'
 import PostJob from './pages/PostJob'
 import ProtectedRoute from './components/ProtectedRoute'
+import JobDetails from './pages/JobDetails'
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
             </ProtectedRoute>
           } 
         />
+        <Route path="/jobs/:id" element={<JobDetails />} />
       </Routes>
     </BrowserRouter>
   )
